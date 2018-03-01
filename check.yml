@@ -1,0 +1,4 @@
+packages:
+  importalias:
+    main: github.com/palantir/go-importalias
+    omit-vendor-dirs: true
