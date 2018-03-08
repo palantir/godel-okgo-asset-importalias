@@ -32,10 +32,10 @@
   version = "1.3.0"
 
 [[projects]]
-  branch = "master"
   name = "github.com/palantir/go-importalias"
   packages = [".","cmd","importalias"]
-  revision = "1c63361fcd1884dc3cbac5465abb5ec5a7f0a45e"
+  revision = "91359414de0b50b9afe6228c1e96a2fb46cad6e0"
+  version = "v1.0.0"
 
 [[projects]]
   branch = "master"
@@ -94,6 +94,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "472743fdf3b2cb0e9413252f433e1203ab883beb8b501dd8fbbfdbd39eb14c39"
+  inputs-digest = "d8e22402cca1ee13ce1502df74f05f23a93ab2df1212c577d8f4c9a78c918849"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -23,6 +23,10 @@
 required = ["github.com/palantir/go-importalias"]
 
 [[constraint]]
+  name = "github.com/palantir/go-importalias"
+  version = "1.0.0"
+
+[[constraint]]
   name = "github.com/palantir/amalgomate"
   version = "1.3.0"
 
