@@ -15,7 +15,6 @@
 package importalias
 
 import (
-	"github.com/palantir/okgo/checker"
 	"github.com/palantir/okgo/okgo"
 )
 
@@ -23,13 +22,3 @@ const (
 	TypeName okgo.CheckerType     = "importalias"
 	Priority okgo.CheckerPriority = 0
 )
-
-func Creator() checker.Creator {
-	return checker.NewCreator(
-		TypeName,
-		Priority,
-		func(cfgYML []byte) (okgo.Checker, error) {
-			return checker.NewAmalgomatedChecker(TypeName, checker.Priority(Priority)), nil
-		},
-	)
-}
