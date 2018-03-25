@@ -22,7 +22,8 @@ import (
 	"github.com/palantir/pkg/cobracli"
 
 	"github.com/palantir/godel-okgo-asset-importalias/generated_src"
-	"github.com/palantir/godel-okgo-asset-importalias/importalias"
+	"github.com/palantir/godel-okgo-asset-importalias/importalias/config"
+	"github.com/palantir/godel-okgo-asset-importalias/importalias/creator"
 )
 
 func main() {
@@ -32,6 +33,6 @@ func main() {
 func checkMain(osArgs []string) int {
 	os.Args = osArgs
 	var debugFlagVal bool
-	rootCmd := checker.AssetRootCmd(importalias.Creator(), "run extimport check")
+	rootCmd := checker.AssetRootCmd(creator.Importalias(), config.UpgradeConfig, "run extimport check")
 	return cobracli.ExecuteWithDefaultParamsWithVersion(rootCmd, &debugFlagVal, "")
 }

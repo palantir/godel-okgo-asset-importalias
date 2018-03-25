@@ -25,7 +25,6 @@ import (
 
 	"github.com/nmiyake/pkg/dirs"
 	"github.com/nmiyake/pkg/gofiles"
-	"github.com/palantir/godel/framework/artifactresolver"
 	"github.com/palantir/godel/framework/pluginapitester"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -43,13 +42,23 @@ type AssetTestCase struct {
 // RunAssetCheckTest tests the "check" operation using the provided asset. Resolves the okgo plugin using the provided
 // locator and resolver, provides it with the asset and invokes the "check" command for the specified asset.
 func RunAssetCheckTest(t *testing.T,
-	okgoPluginLocator, okgoPluginResolver string,
-	assetPath, checkName string,
+	pluginProvider pluginapitester.PluginProvider,
+	assetProvider pluginapitester.AssetProvider,
+	checkName string,
+	testBaseDir string,
 	testCases []AssetTestCase,
 ) {
-
-	tmpDir, cleanup, err := dirs.TempDir("", "")
+	wd, err := os.Getwd()
 	require.NoError(t, err)
+	if testBaseDir != "" && !filepath.IsAbs(testBaseDir) {
+		testBaseDir = path.Join(wd, testBaseDir)
+	}
+
+	tmpDir, cleanup, err := dirs.TempDir(testBaseDir, "")
+	require.NoError(t, err)
+	if !filepath.IsAbs(tmpDir) {
+		tmpDir = path.Join(wd, tmpDir)
+	}
 	defer cleanup()
 
 	tmpDir, err = filepath.EvalSymlinks(tmpDir)
@@ -76,19 +85,7 @@ func RunAssetCheckTest(t *testing.T,
 		require.NoError(t, err)
 
 		outputBuf := &bytes.Buffer{}
-		pluginCfg := artifactresolver.LocatorWithResolverConfig{
-			Locator: artifactresolver.LocatorConfig{
-				ID: okgoPluginLocator,
-			},
-			Resolver: okgoPluginResolver,
-		}
-		pluginsParam, err := pluginCfg.ToParam()
-		require.NoError(t, err)
-
 		func() {
-			wd, err := os.Getwd()
-			require.NoError(t, err)
-
 			wantWd := projectDir
 			if tc.Wd != "" {
 				wantWd = path.Join(wantWd, tc.Wd)
@@ -100,9 +97,11 @@ func RunAssetCheckTest(t *testing.T,
 				require.NoError(t, err)
 			}()
 
-			runPluginCleanup, err := pluginapitester.RunAsset(pluginsParam, []string{assetPath}, "check", []string{
-				checkName,
-			}, projectDir, false, outputBuf)
+			runPluginCleanup, err := pluginapitester.RunPlugin(
+				pluginProvider,
+				[]pluginapitester.AssetProvider{assetProvider},
+				"check", []string{checkName},
+				projectDir, false, outputBuf)
 			defer runPluginCleanup()
 			if tc.WantError {
 				require.EqualError(t, err, "", "Case %d: %s", i, tc.Name)

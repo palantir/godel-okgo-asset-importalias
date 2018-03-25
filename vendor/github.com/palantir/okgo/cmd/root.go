@@ -15,6 +15,7 @@
 package cmd
 
 import (
+	"io/ioutil"
 	"path"
 
 	"github.com/palantir/godel/framework/godellauncher"
@@ -22,9 +23,12 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"gopkg.in/yaml.v2"
 
 	"github.com/palantir/okgo/checker"
+	"github.com/palantir/okgo/checker/checkerfactory"
 	"github.com/palantir/okgo/okgo"
+	"github.com/palantir/okgo/okgo/config"
 )
 
 var (
@@ -42,15 +46,15 @@ var RootCmd = &cobra.Command{
 
 func InitAssetCmds(args []string) error {
 	if _, _, err := RootCmd.Traverse(args); err != nil && err != pflag.ErrHelp {
-		return errors.Wrapf(err, "failed to parse arguments 2")
+		return errors.Wrapf(err, "failed to parse arguments")
 	}
 
 	// load checker assets
-	checkerCreators, err := checker.AssetCheckerCreators(assetsFlagVal...)
+	checkerCreators, configUpgraders, err := checker.AssetCheckerCreators(assetsFlagVal...)
 	if err != nil {
 		return err
 	}
-	cliCheckerFactory, err = checker.NewCheckerFactory(checkerCreators...)
+	cliCheckerFactory, err = checkerfactory.New(checkerCreators, configUpgraders)
 	if err != nil {
 		return err
 	}
@@ -73,9 +77,9 @@ func okgoProjectParamFromFlags() (okgo.ProjectParam, error) {
 }
 
 func okgoProjectParamFromVals(okgoConfigFile, godelConfigFile string, factory okgo.CheckerFactory) (okgo.ProjectParam, error) {
-	var okgoCfg okgo.ProjectConfig
+	var okgoCfg config.ProjectConfig
 	if okgoConfigFile != "" {
-		cfg, err := okgo.LoadConfigFromFile(okgoConfigFile)
+		cfg, err := loadConfigFromFile(okgoConfigFile)
 		if err != nil {
 			return okgo.ProjectParam{}, err
 		}
@@ -93,4 +97,22 @@ func okgoProjectParamFromVals(okgoConfigFile, godelConfigFile string, factory ok
 		return okgo.ProjectParam{}, err
 	}
 	return projectParam, nil
+}
+
+func loadConfigFromFile(cfgFile string) (config.ProjectConfig, error) {
+	cfgBytes, err := ioutil.ReadFile(cfgFile)
+	if err != nil {
+		return config.ProjectConfig{}, errors.Wrapf(err, "failed to read configuration file")
+	}
+
+	upgradedCfg, err := config.UpgradeConfig(cfgBytes, cliCheckerFactory)
+	if err != nil {
+		return config.ProjectConfig{}, err
+	}
+
+	var cfg config.ProjectConfig
+	if err := yaml.Unmarshal(upgradedCfg, &cfg); err != nil {
+		return config.ProjectConfig{}, errors.Wrapf(err, "failed to unmarshal configuration")
+	}
+	return cfg, nil
 }
