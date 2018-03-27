@@ -25,7 +25,7 @@ import (
 )
 
 const (
-	okgoPluginLocator  = "com.palantir.okgo:check-plugin:1.0.0-rc3"
+	okgoPluginLocator  = "com.palantir.okgo:check-plugin:1.0.0-rc4"
 	okgoPluginResolver = "https://palantir.bintray.com/releases/{{GroupPath}}/{{Product}}/{{Version}}/{{Product}}-{{Version}}-{{OS}}-{{Arch}}.tgz"
 
 	godelYML = `exclude:
