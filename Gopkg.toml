@@ -36,6 +36,10 @@ required = ["github.com/palantir/go-importalias"]
 
 [[constraint]]
   branch = "master"
+  name = "github.com/palantir/godel"
+
+[[constraint]]
+  branch = "master"
   name = "github.com/palantir/pkg"
 
 [[constraint]]
