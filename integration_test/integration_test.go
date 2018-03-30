@@ -27,17 +27,17 @@ import (
 const (
 	okgoPluginLocator  = "com.palantir.okgo:check-plugin:1.0.0-rc4"
 	okgoPluginResolver = "https://palantir.bintray.com/releases/{{GroupPath}}/{{Product}}/{{Version}}/{{Product}}-{{Version}}-{{OS}}-{{Arch}}.tgz"
+)
 
-	godelYML = `exclude:
+func TestCheck(t *testing.T) {
+	const godelYML = `exclude:
   names:
     - "\\..+"
     - "vendor"
   paths:
     - "godel"
 `
-)
 
-func TestCheck(t *testing.T) {
 	assetPath, err := products.Bin("importalias-asset")
 	require.NoError(t, err)
 
@@ -126,9 +126,7 @@ func TestUpgradeConfig(t *testing.T) {
 			{
 				Name: `legacy configuration with empty "args" field is updated`,
 				ConfigFiles: map[string]string{
-					"godel/config/godel.yml": godelYML,
-					"godel/config/check-plugin.yml": `
-legacy-config: true
+					"godel/config/check.yml": `
 checks:
   importalias:
     filters:
@@ -137,6 +135,7 @@ checks:
         value: ".*.pb.go"
 `,
 				},
+				Legacy: true,
 				WantOutput: `Upgraded configuration for check-plugin.yml
 `,
 				WantFiles: map[string]string{
@@ -162,22 +161,20 @@ exclude:
 			{
 				Name: `legacy configuration with non-empty "args" field fails`,
 				ConfigFiles: map[string]string{
-					"godel/config/godel.yml": godelYML,
-					"godel/config/check-plugin.yml": `
-legacy-config: true
+					"godel/config/check.yml": `
 checks:
   importalias:
     args:
       - "-foo"
 `,
 				},
+				Legacy:    true,
 				WantError: true,
 				WantOutput: `Failed to upgrade configuration:
-	godel/config/check-plugin.yml: failed to upgrade check "importalias" legacy configuration: failed to upgrade asset configuration: importalias-asset does not support legacy configuration with a non-empty "args" field
+	godel/config/check-plugin.yml: failed to upgrade configuration: failed to upgrade check "importalias" legacy configuration: failed to upgrade asset configuration: importalias-asset does not support legacy configuration with a non-empty "args" field
 `,
 				WantFiles: map[string]string{
-					"godel/config/check-plugin.yml": `
-legacy-config: true
+					"godel/config/check.yml": `
 checks:
   importalias:
     args:
@@ -188,7 +185,6 @@ checks:
 			{
 				Name: `empty v0 config works`,
 				ConfigFiles: map[string]string{
-					"godel/config/godel.yml": godelYML,
 					"godel/config/check-plugin.yml": `
 checks:
   importalias:
@@ -211,7 +207,6 @@ checks:
 			{
 				Name: `non-empty v0 config does not work`,
 				ConfigFiles: map[string]string{
-					"godel/config/godel.yml": godelYML,
 					"godel/config/check-plugin.yml": `
 checks:
   importalias:

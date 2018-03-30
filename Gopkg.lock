@@ -76,14 +76,14 @@
 [[projects]]
   branch = "master"
   name = "github.com/palantir/godel"
-  packages = ["framework/artifactresolver","framework/builtintasks","framework/builtintasks/checkpath","framework/builtintasks/githooks","framework/builtintasks/githubwiki","framework/builtintasks/idea","framework/builtintasks/installupdate","framework/builtintasks/installupdate/layout","framework/builtintasks/packages","framework/godel","framework/godel/config","framework/godel/config/internal/legacy","framework/godel/config/internal/v0","framework/godellauncher","framework/internal/pathsinternal","framework/pluginapi","framework/pluginapi/v2/pluginapi","framework/pluginapitester","framework/plugins","framework/verifyorder","godelgetter","pkg/osarch","pkg/products","pkg/versionedconfig"]
-  revision = "85235ee4112d52cba80bc57a53f62976ce936cc5"
+  packages = ["framework/artifactresolver","framework/builtintasks","framework/builtintasks/checkpath","framework/builtintasks/githooks","framework/builtintasks/githubwiki","framework/builtintasks/idea","framework/builtintasks/installupdate","framework/builtintasks/installupdate/layout","framework/builtintasks/packages","framework/godel","framework/godel/config","framework/godel/config/internal/v0","framework/godellauncher","framework/godellauncher/defaulttasks","framework/internal/pathsinternal","framework/internal/pluginsinternal","framework/pluginapi","framework/pluginapi/v2/pluginapi","framework/pluginapitester","framework/plugins","framework/verifyorder","godelgetter","pkg/osarch","pkg/products","pkg/versionedconfig"]
+  revision = "6ef6fc2811e260af0641aae25a45881217b3cf3d"
 
 [[projects]]
+  branch = "master"
   name = "github.com/palantir/okgo"
   packages = ["checker","okgo","okgotester"]
-  revision = "87103a64025e9a79e20fd6669a46969f99573d45"
-  version = "v1.0.0-rc4"
+  revision = "55643a0dc2ddd7000da31c5945e0de216f107053"
 
 [[projects]]
   branch = "master"
@@ -154,6 +154,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cd4f5bea50f6d57e44f54df543251f06cc4bd81584fe9b604d95f5d78e1c0bee"
+  inputs-digest = "981219b6c7947fe2d2ee8f34912e4bacccb1e2205fb10af92b909b9dfe9285ba"
   solver-name = "gps-cdcl"
   solver-version = 1
