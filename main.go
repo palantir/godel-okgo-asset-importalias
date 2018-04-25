@@ -32,7 +32,6 @@ func main() {
 
 func checkMain(osArgs []string) int {
 	os.Args = osArgs
-	var debugFlagVal bool
 	rootCmd := checker.AssetRootCmd(creator.Importalias(), config.UpgradeConfig, "run extimport check")
-	return cobracli.ExecuteWithDefaultParamsWithVersion(rootCmd, &debugFlagVal, "")
+	return cobracli.ExecuteWithDefaultParams(rootCmd)
 }

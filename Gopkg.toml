@@ -24,7 +24,7 @@ required = ["github.com/palantir/go-importalias"]
 
 [[constraint]]
   name = "github.com/palantir/go-importalias"
-  version = "1.0.0"
+  version = "1.1.0"
 
 [[constraint]]
   name = "github.com/palantir/amalgomate"
@@ -48,4 +48,4 @@ required = ["github.com/palantir/go-importalias"]
 
 [[constraint]]
   name = "github.com/spf13/cobra"
-  version = "0.0.1"
+  version = "0.0.2"
