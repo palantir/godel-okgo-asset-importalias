@@ -25,7 +25,7 @@ import (
 )
 
 const (
-	okgoPluginLocator  = "com.palantir.okgo:check-plugin:1.0.0-rc4"
+	okgoPluginLocator  = "com.palantir.okgo:check-plugin:1.0.0"
 	okgoPluginResolver = "https://palantir.bintray.com/releases/{{GroupPath}}/{{Product}}/{{Version}}/{{Product}}-{{Version}}-{{OS}}-{{Arch}}.tgz"
 )
 
@@ -139,22 +139,13 @@ checks:
 				WantOutput: `Upgraded configuration for check-plugin.yml
 `,
 				WantFiles: map[string]string{
-					"godel/config/check-plugin.yml": `release-tag: ""
-checks:
+					"godel/config/check-plugin.yml": `checks:
   importalias:
-    skip: false
-    priority: null
-    config: {}
     filters:
-    - type: ""
-      value: should have comment or be unexported
+    - value: should have comment or be unexported
     exclude:
       names:
       - .*.pb.go
-      paths: []
-exclude:
-  names: []
-  paths: []
 `,
 				},
 			},
