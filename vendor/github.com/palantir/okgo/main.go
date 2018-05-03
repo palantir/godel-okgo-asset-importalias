@@ -19,23 +19,18 @@ import (
 	"os"
 
 	"github.com/palantir/godel/framework/pluginapi/v2/pluginapi"
-	"github.com/palantir/pkg/cobracli"
 
 	"github.com/palantir/okgo/cmd"
 )
-
-var debugFlagVal bool
 
 func main() {
 	if ok := pluginapi.InfoCmd(os.Args, os.Stdout, cmd.PluginInfo); ok {
 		return
 	}
 	// initialize commands that require assets
-	pluginapi.AddDebugPFlagPtr(cmd.RootCmd.PersistentFlags(), &debugFlagVal)
 	if err := cmd.InitAssetCmds(os.Args[1:]); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
-	os.Exit(cobracli.ExecuteWithDefaultParamsWithVersion(cmd.RootCmd, &debugFlagVal, ""))
+	os.Exit(cmd.Execute())
 }
