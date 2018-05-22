@@ -12,26 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
+package creator
 
 import (
-	"github.com/spf13/cobra"
+	"github.com/palantir/okgo/checker"
+	"github.com/palantir/okgo/okgo"
 
-	"github.com/palantir/godel-okgo-asset-importalias/generated_src/internal/github.com/palantir/go-importalias/importalias"
+	"github.com/palantir/godel-okgo-asset-importalias/importalias"
 )
 
-var (
-	RootCmd = &cobra.Command{
-		Use:   "importalias [flags] [packages]",
-		Short: "verifies that import aliases are consistent across files and packages",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return importalias.Run(args, verboseFlagVal, cmd.OutOrStdout())
+func Importalias() checker.Creator {
+	return checker.NewCreator(
+		importalias.TypeName,
+		importalias.Priority,
+		func(cfgYML []byte) (okgo.Checker, error) {
+			return checker.NewAmalgomatedChecker(importalias.TypeName, checker.ParamPriority(importalias.Priority)), nil
 		},
-	}
-
-	verboseFlagVal bool
-)
-
-func init() {
-	RootCmd.Flags().BoolVarP(&verboseFlagVal, "verbose", "v", false, "print verbose analysis of all imports that have multiple aliases")
+	)
 }

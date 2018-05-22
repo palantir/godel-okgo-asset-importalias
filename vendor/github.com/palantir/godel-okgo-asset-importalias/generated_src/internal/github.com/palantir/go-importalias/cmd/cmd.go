@@ -21,15 +21,15 @@ import (
 )
 
 var (
-	RootCmd = &cobra.Command{
-		Use:   "importalias [flags] [packages]",
-		Short: "verifies that import aliases are consistent across files and packages",
+	RootCmd	= &cobra.Command{
+		Use:	"importalias [flags] [packages]",
+		Short:	"verifies that import aliases are consistent across files and packages",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return importalias.Run(args, verboseFlagVal, cmd.OutOrStdout())
 		},
 	}
 
-	verboseFlagVal bool
+	verboseFlagVal	bool
 )
 
 func init() {
