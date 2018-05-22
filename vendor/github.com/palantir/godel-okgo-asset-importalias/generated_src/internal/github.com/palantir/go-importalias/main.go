@@ -12,26 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
+package amalgomated
 
 import (
-	"github.com/spf13/cobra"
+	"os"
 
-	"github.com/palantir/godel-okgo-asset-importalias/generated_src/internal/github.com/palantir/go-importalias/importalias"
+	"github.com/palantir/pkg/cobracli"
+
+	"github.com/palantir/godel-okgo-asset-importalias/generated_src/internal/github.com/palantir/go-importalias/cmd"
 )
 
-var (
-	RootCmd = &cobra.Command{
-		Use:   "importalias [flags] [packages]",
-		Short: "verifies that import aliases are consistent across files and packages",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return importalias.Run(args, verboseFlagVal, cmd.OutOrStdout())
-		},
-	}
-
-	verboseFlagVal bool
-)
-
-func init() {
-	RootCmd.Flags().BoolVarP(&verboseFlagVal, "verbose", "v", false, "print verbose analysis of all imports that have multiple aliases")
+func AmalgomatedMain() {
+	os.Exit(cobracli.ExecuteWithDefaultParams(cmd.RootCmd))
 }
