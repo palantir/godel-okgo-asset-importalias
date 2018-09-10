@@ -4,7 +4,7 @@ working_dir: &working_dir
 darwin-linux-no-cgo: &darwin-linux-no-cgo
   <<: *working_dir
   docker:
-    - image: nmiyake/go:go-darwin-linux-no-cgo-1.10.1-t127
+    - image: nmiyake/go:go-darwin-linux-no-cgo-1.11-t133
       environment:
         CGO_ENABLED: 0
 
@@ -45,7 +45,8 @@ go-install-packages: &go-install-packages
   run: go install $(./godelw packages)
 
 godelw-verify: &godelw-verify
-  run: ./godelw verify --apply=false --junit-output="$TESTS_DIR/$CIRCLE_PROJECT_REPONAME-tests.xml"
+  # TODO: remove "--skip-check" option once checks are re-compiled for Go 1.11
+  run: ./godelw verify --apply=false --skip-check --junit-output="$TESTS_DIR/$CIRCLE_PROJECT_REPONAME-tests.xml"
 
 store-test-results: &store-test-results
   type: test-results-store
