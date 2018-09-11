@@ -45,8 +45,7 @@ go-install-packages: &go-install-packages
   run: go install $(./godelw packages)
 
 godelw-verify: &godelw-verify
-  # TODO: remove "--skip-check" option once checks are re-compiled for Go 1.11
-  run: ./godelw verify --apply=false --skip-check --junit-output="$TESTS_DIR/$CIRCLE_PROJECT_REPONAME-tests.xml"
+  run: ./godelw verify --apply=false --junit-output="$TESTS_DIR/$CIRCLE_PROJECT_REPONAME-tests.xml"
 
 store-test-results: &store-test-results
   type: test-results-store
