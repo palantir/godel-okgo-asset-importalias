@@ -84,17 +84,7 @@ func InstallVersion(projectDir, targetVersion, wantChecksum string, cacheValidDu
 	} else {
 		installFn = Update
 	}
-	if err := installFn(projectDir, pkgSrc, stdout); err != nil {
-		return err
-	}
-
-	// update godel.properties with checksum if provided (if this point was reached, checksum was verified)
-	if wantChecksum != "" {
-		if err := setGodelPropertyKey(projectDir, propertiesChecksumKey, wantChecksum); err != nil {
-			return err
-		}
-	}
-	return nil
+	return installFn(projectDir, pkgSrc, stdout)
 }
 
 // pkgSrcForVersion returns a package source for the provided version. If the distribution for the provided version has
@@ -105,21 +95,26 @@ func pkgSrcForVersion(version, wantChecksum string) (godelgetter.PkgSrc, error) 
 	if version == "" {
 		return nil, errors.Errorf("version for package must be specified")
 	}
+
+	// consider distribution URL to be canonical source
+	canonicalSrcPkgPath := fmt.Sprintf("https://palantir.bintray.com/releases/com/palantir/godel/godel/%s/godel-%s.tgz", version, version)
+
 	pkgPath, checksum, err := downloadedTGZForVersion(version)
 	if err != nil || (wantChecksum != "" && checksum != wantChecksum) {
-		pkgPath = fmt.Sprintf("https://palantir.bintray.com/releases/com/palantir/godel/godel/%s/godel-%s.tgz", version, version)
+		// if downloaded version was not present locally, fall back on canonical source
+		pkgPath = canonicalSrcPkgPath
 	}
-	return godelgetter.NewPkgSrc(pkgPath, wantChecksum), nil
+	return godelgetter.NewPkgSrc(pkgPath, wantChecksum, godelgetter.PkgSrcCanonicalSourceParam(canonicalSrcPkgPath)), nil
 }
 
 // downloadedTGZForVersion returns the path and checksum for the downloaded TGZ for the specified version. Returns an
 // error if the TGZ for the specified version does not exist (has not been downloaded).
 func downloadedTGZForVersion(version string) (string, string, error) {
-	gödelHomeSpecDir, err := layout.GodelHomeSpecDir(specdir.Create)
+	godelHomeSpecDir, err := layout.GodelHomeSpecDir(specdir.Create)
 	if err != nil {
 		return "", "", errors.Wrapf(err, "failed to create SpecDir for gödel home")
 	}
-	downloadsDirPath := gödelHomeSpecDir.Path(layout.DownloadsDir)
+	downloadsDirPath := godelHomeSpecDir.Path(layout.DownloadsDir)
 	downloadedTGZ := path.Join(downloadsDirPath, fmt.Sprintf("%s-%s.tgz", layout.AppName, version))
 	if _, err := os.Stat(downloadedTGZ); err != nil {
 		return "", "", errors.Wrapf(err, "failed to stat downloaded TGZ file")
@@ -160,11 +155,11 @@ func latestGodelVersion(cacheExpiration time.Duration) (string, error) {
 const latestVersionFileName = "latest-version.json"
 
 func readLatestCachedVersion() (versionConfig, error) {
-	gödelHomeSpecDir, err := layout.GodelHomeSpecDir(specdir.Create)
+	godelHomeSpecDir, err := layout.GodelHomeSpecDir(specdir.Create)
 	if err != nil {
 		return versionConfig{}, errors.Wrapf(err, "failed to create SpecDir for gödel home")
 	}
-	cacheDirPath := gödelHomeSpecDir.Path(layout.CacheDir)
+	cacheDirPath := godelHomeSpecDir.Path(layout.CacheDir)
 	latestVersionFile := path.Join(cacheDirPath, latestVersionFileName)
 
 	bytes, err := ioutil.ReadFile(latestVersionFile)
@@ -179,11 +174,11 @@ func readLatestCachedVersion() (versionConfig, error) {
 }
 
 func writeLatestCachedVersion(version string) error {
-	gödelHomeSpecDir, err := layout.GodelHomeSpecDir(specdir.Create)
+	godelHomeSpecDir, err := layout.GodelHomeSpecDir(specdir.Create)
 	if err != nil {
 		return errors.Wrapf(err, "failed to create SpecDir for gödel home")
 	}
-	cacheDirPath := gödelHomeSpecDir.Path(layout.CacheDir)
+	cacheDirPath := godelHomeSpecDir.Path(layout.CacheDir)
 	latestVersionFile := path.Join(cacheDirPath, latestVersionFileName)
 
 	bytes, err := json.Marshal(versionConfig{
@@ -273,7 +268,7 @@ func update(wrapperScriptDir string, pkg godelgetter.PkgSrc, newInstall bool, st
 		return err
 	}
 
-	gödelDist, err := layout.GodelDistLayout(version, specdir.Validate)
+	godelDist, err := layout.GodelDistLayout(version, specdir.Validate)
 	if err != nil {
 		return errors.Wrapf(err, "unable to get gödel home directory")
 	}
@@ -285,13 +280,13 @@ func update(wrapperScriptDir string, pkg godelgetter.PkgSrc, newInstall bool, st
 	}
 
 	// copy new wrapper script to temp directory on same device and then move to destination
-	installedGödelWrapper := gödelDist.Path(layout.WrapperScriptFile)
-	tmpGödelWrapper := path.Join(tmpDir, "godelw")
-	if err := layout.CopyFile(installedGödelWrapper, tmpGödelWrapper); err != nil {
-		return errors.Wrapf(err, "failed to copy %s to %s", installedGödelWrapper, tmpGödelWrapper)
+	installedGodelWrapper := godelDist.Path(layout.WrapperScriptFile)
+	tmpGodelWrapper := path.Join(tmpDir, "godelw")
+	if err := layout.CopyFile(installedGodelWrapper, tmpGodelWrapper); err != nil {
+		return errors.Wrapf(err, "failed to copy %s to %s", installedGodelWrapper, tmpGodelWrapper)
 	}
 
-	if err := os.Rename(tmpGödelWrapper, wrapper.Path(layout.WrapperScriptFile)); err != nil {
+	if err := os.Rename(tmpGodelWrapper, wrapper.Path(layout.WrapperScriptFile)); err != nil {
 		return errors.Wrapf(err, "failed to move wrapper script into place")
 	}
 
@@ -303,19 +298,19 @@ func update(wrapperScriptDir string, pkg godelgetter.PkgSrc, newInstall bool, st
 	}
 
 	// additively sync config directory
-	if err := layout.SyncDirAdditive(gödelDist.Path(layout.WrapperConfigDir), wrapper.Path(layout.WrapperConfigDir)); err != nil {
-		return errors.Wrapf(err, "failed to additively sync from %s to %s", gödelDist.Path(layout.WrapperConfigDir), wrapper.Path(layout.WrapperConfigDir))
+	if err := layout.SyncDirAdditive(godelDist.Path(layout.WrapperConfigDir), wrapper.Path(layout.WrapperConfigDir)); err != nil {
+		return errors.Wrapf(err, "failed to additively sync from %s to %s", godelDist.Path(layout.WrapperConfigDir), wrapper.Path(layout.WrapperConfigDir))
 	}
 
 	// overlay all directories except "config"
-	installedGödelWrapperDir := gödelDist.Path(layout.WrapperAppDir)
-	wrapperDirFiles, err := ioutil.ReadDir(installedGödelWrapperDir)
+	installedGodelWrapperDir := godelDist.Path(layout.WrapperAppDir)
+	wrapperDirFiles, err := ioutil.ReadDir(installedGodelWrapperDir)
 	if err != nil {
-		return errors.Wrapf(err, "failed to list files in directory %s", installedGödelWrapperDir)
+		return errors.Wrapf(err, "failed to list files in directory %s", installedGodelWrapperDir)
 	}
 
 	for _, currWrapperFile := range wrapperDirFiles {
-		syncSrcPath := path.Join(installedGödelWrapperDir, currWrapperFile.Name())
+		syncSrcPath := path.Join(installedGodelWrapperDir, currWrapperFile.Name())
 		syncDestPath := path.Join(wrapperScriptDir, layout.AppName, currWrapperFile.Name())
 
 		if currWrapperFile.IsDir() && currWrapperFile.Name() == layout.WrapperConfigDir {
@@ -340,6 +335,18 @@ func update(wrapperScriptDir string, pkg godelgetter.PkgSrc, newInstall bool, st
 				return errors.Wrapf(err, "failed to copy %s to %s", syncSrcPath, syncDestPath)
 			}
 		}
+	}
+
+	// update values in godel.properties
+	canonicalSrc := pkg.CanonicalSource()
+	if canonicalSrc == "" {
+		canonicalSrc = pkg.Path()
+	}
+	if err := setGodelPropertyKey(wrapperScriptDir, propertiesURLKey, canonicalSrc); err != nil {
+		return errors.Wrap(err, "failed to update URL in godel properties file")
+	}
+	if err := setGodelPropertyKey(wrapperScriptDir, propertiesChecksumKey, pkg.Checksum()); err != nil {
+		return errors.Wrap(err, "failed to update checksum in godel properties file")
 	}
 	return nil
 }
