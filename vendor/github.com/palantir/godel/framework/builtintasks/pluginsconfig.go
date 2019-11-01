@@ -41,17 +41,14 @@ func printTasksCfgInfo(tasksCfgInfo config.TasksConfigInfo, stdout io.Writer) er
 	if err := printWithHeader("Built-in plugin configuration", tasksCfgInfo.BuiltinPluginsConfig, stdout); err != nil {
 		return err
 	}
-	fmt.Fprintln(stdout)
+	_, _ = fmt.Fprintln(stdout)
 
 	if err := printWithHeader("Fully resolved godel tasks configuration", tasksCfgInfo.TasksConfig, stdout); err != nil {
 		return err
 	}
-	fmt.Fprintln(stdout)
+	_, _ = fmt.Fprintln(stdout)
 
-	if err := printWithHeader("Plugin configuration for default tasks", tasksCfgInfo.DefaultTasksPluginsConfig, stdout); err != nil {
-		return err
-	}
-	return nil
+	return printWithHeader("Plugin configuration for default tasks", tasksCfgInfo.DefaultTasksPluginsConfig, stdout)
 }
 
 func printWithHeader(header string, in interface{}, stdout io.Writer) error {
@@ -60,13 +57,13 @@ func printWithHeader(header string, in interface{}, stdout io.Writer) error {
 	if err != nil {
 		return err
 	}
-	fmt.Fprint(stdout, ymlString)
+	_, _ = fmt.Fprint(stdout, ymlString)
 	return nil
 }
 
 func printHeader(header string, stdout io.Writer) {
-	fmt.Fprintln(stdout, header+":")
-	fmt.Fprintln(stdout, strings.Repeat("-", len(header)+1))
+	_, _ = fmt.Fprintln(stdout, header+":")
+	_, _ = fmt.Fprintln(stdout, strings.Repeat("-", len(header)+1))
 }
 
 func toYAMLString(in interface{}) (string, error) {

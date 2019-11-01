@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Copyright (c) 2016 Palantir Technologies Inc. All rights reserved.
-// Use of this source code is governed by the Apache License, Version 2.0
-// that can be found in the LICENSE file.
-
 package config
 
 import (
 	"github.com/pkg/errors"
 
-	"github.com/palantir/godel/framework/godel/config/internal/v0"
+	v0 "github.com/palantir/godel/framework/godel/config/internal/v0"
 	"github.com/palantir/godel/pkg/versionedconfig"
 )
 

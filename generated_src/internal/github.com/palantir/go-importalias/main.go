@@ -17,11 +17,9 @@ package amalgomated
 import (
 	"os"
 
-	"github.com/palantir/pkg/cobracli"
-
 	"github.com/palantir/godel-okgo-asset-importalias/generated_src/internal/github.com/palantir/go-importalias/cmd"
 )
 
 func AmalgomatedMain() {
-	os.Exit(cobracli.ExecuteWithDefaultParams(cmd.RootCmd))
+	os.Exit(cmd.Execute())
 }

@@ -19,7 +19,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/palantir/godel-okgo-asset-importalias/importalias/config/internal/legacy"
-	"github.com/palantir/godel-okgo-asset-importalias/importalias/config/internal/v0"
+	v0 "github.com/palantir/godel-okgo-asset-importalias/importalias/config/internal/v0"
 )
 
 func UpgradeConfig(cfgBytes []byte) ([]byte, error) {
