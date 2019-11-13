@@ -12,12 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v0
+package packages
 
 import (
-	"github.com/palantir/godel/v2/pkg/versionedconfig"
+	"github.com/palantir/pkg/matcher"
+	"github.com/palantir/pkg/pkgpath"
+	"github.com/pkg/errors"
 )
 
-func UpgradeConfig(cfgBytes []byte) ([]byte, error) {
-	return versionedconfig.ConfigNotSupported("importalias-asset", cfgBytes)
+func List(exclude matcher.Matcher, wd string) ([]string, error) {
+	pkgs, err := pkgpath.PackagesInDir(wd, exclude)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to list packages")
+	}
+
+	pkgPaths, err := pkgs.Paths(pkgpath.Relative)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to get package paths")
+	}
+
+	return pkgPaths, nil
 }

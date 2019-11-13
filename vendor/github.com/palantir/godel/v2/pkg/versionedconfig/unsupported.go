@@ -12,12 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v0
+package versionedconfig
 
 import (
-	"github.com/palantir/godel/v2/pkg/versionedconfig"
+	"github.com/pkg/errors"
+	"gopkg.in/yaml.v2"
 )
 
-func UpgradeConfig(cfgBytes []byte) ([]byte, error) {
-	return versionedconfig.ConfigNotSupported("importalias-asset", cfgBytes)
+// ConfigNotSupported verifies that the provided bytes represent empty YAML. If the YAML is non-empty, return an error.
+func ConfigNotSupported(name string, cfgBytes []byte) ([]byte, error) {
+	var mapSlice yaml.MapSlice
+	if err := yaml.Unmarshal(cfgBytes, &mapSlice); err != nil {
+		return nil, errors.Wrapf(err, "failed to unmarshal %s configuration as yaml.MapSlice", name)
+	}
+	if len(mapSlice) != 0 {
+		return nil, errors.Errorf("%s does not currently support configuration", name)
+	}
+	return cfgBytes, nil
 }

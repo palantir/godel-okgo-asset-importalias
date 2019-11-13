@@ -12,12 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v0
+// +build !windows
+
+package checkpath
 
 import (
-	"github.com/palantir/godel/v2/pkg/versionedconfig"
+	"os"
+	"syscall"
 )
 
-func UpgradeConfig(cfgBytes []byte) ([]byte, error) {
-	return versionedconfig.ConfigNotSupported("importalias-asset", cfgBytes)
+func pathsOnSameDevice(p1, p2 string) bool {
+	id1, ok := getDeviceID(p1)
+	if !ok {
+		return false
+	}
+	id2, ok := getDeviceID(p2)
+	if !ok {
+		return false
+	}
+	return id1 == id2
+}
+
+func getDeviceID(p string) (interface{}, bool) {
+	fi, err := os.Stat(p)
+	if err != nil {
+		return 0, false
+	}
+	s := fi.Sys()
+	switch s := s.(type) {
+	case *syscall.Stat_t:
+		return s.Dev, true
+	}
+	return 0, false
 }

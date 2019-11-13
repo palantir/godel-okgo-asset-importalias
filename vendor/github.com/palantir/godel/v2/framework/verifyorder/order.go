@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v0
+package verifyorder
 
-import (
-	"github.com/palantir/godel/v2/pkg/versionedconfig"
+const (
+	Format   = 100
+	Generate = 200
+	Imports  = 300
+	License  = 400
+	Check    = 500
+	Default  = 750
+	Test     = 1000
 )
-
-func UpgradeConfig(cfgBytes []byte) ([]byte, error) {
-	return versionedconfig.ConfigNotSupported("importalias-asset", cfgBytes)
-}
