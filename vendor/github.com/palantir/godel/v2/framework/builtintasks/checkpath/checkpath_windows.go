@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v0
+// +build windows
+
+package checkpath
 
 import (
-	"github.com/palantir/godel/v2/pkg/versionedconfig"
+	"path/filepath"
 )
 
-func UpgradeConfig(cfgBytes []byte) ([]byte, error) {
-	return versionedconfig.ConfigNotSupported("importalias-asset", cfgBytes)
+func pathsOnSameDevice(p1, p2 string) bool {
+	return filepath.VolumeName(p1) == filepath.VolumeName(p2)
 }

@@ -12,12 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v0
+package builtintasks
 
 import (
-	"github.com/palantir/godel/v2/pkg/versionedconfig"
+	"github.com/palantir/godel/v2/framework/godel/config"
+	"github.com/palantir/godel/v2/framework/godellauncher"
 )
 
-func UpgradeConfig(cfgBytes []byte) ([]byte, error) {
-	return versionedconfig.ConfigNotSupported("importalias-asset", cfgBytes)
+func Tasks(tasksCfgInfo config.TasksConfigInfo) []godellauncher.Task {
+	return []godellauncher.Task{
+		VersionTask(),
+		InstallTask(),
+		UpdateTask(),
+		InfoTask(),
+		ExecTask(),
+		CheckPathTask(),
+		GitHooksTask(),
+		GitHubWikiTask(),
+		IDEATask(),
+		PackagesTask(),
+		TasksConfigTask(tasksCfgInfo),
+	}
 }

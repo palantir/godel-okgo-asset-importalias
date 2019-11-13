@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v0
+package pluginapi
 
-import (
-	"github.com/palantir/godel/v2/pkg/versionedconfig"
-)
-
-func UpgradeConfig(cfgBytes []byte) ([]byte, error) {
-	return versionedconfig.ConfigNotSupported("importalias-asset", cfgBytes)
+type SchemaVersion struct {
+	PluginSchemaVersionVar string `json:"pluginSchemaVersion"`
 }

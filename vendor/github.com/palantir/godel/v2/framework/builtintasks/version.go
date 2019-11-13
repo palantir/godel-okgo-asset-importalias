@@ -12,12 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v0
+package builtintasks
 
 import (
-	"github.com/palantir/godel/v2/pkg/versionedconfig"
+	"fmt"
+
+	"github.com/spf13/cobra"
+
+	"github.com/palantir/godel/v2/framework/godel"
+	"github.com/palantir/godel/v2/framework/godellauncher"
 )
 
-func UpgradeConfig(cfgBytes []byte) ([]byte, error) {
-	return versionedconfig.ConfigNotSupported("importalias-asset", cfgBytes)
+var Version = "unspecified"
+
+func VersionTask() godellauncher.Task {
+	return godellauncher.CobraCLITask(&cobra.Command{
+		Use:   "version",
+		Short: fmt.Sprintf("Print %s version", godel.AppName),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			_, _ = fmt.Fprintln(cmd.OutOrStdout(), godel.VersionOutput())
+			return nil
+		},
+	}, nil)
 }

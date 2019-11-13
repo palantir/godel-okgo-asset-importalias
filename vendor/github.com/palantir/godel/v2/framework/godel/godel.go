@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v0
+package godel
 
 import (
-	"github.com/palantir/godel/v2/pkg/versionedconfig"
+	"fmt"
 )
 
-func UpgradeConfig(cfgBytes []byte) ([]byte, error) {
-	return versionedconfig.ConfigNotSupported("importalias-asset", cfgBytes)
+const AppName = "godel"
+
+var Version = "unspecified"
+
+func VersionOutput() string {
+	return fmt.Sprintf("%s version %s", AppName, Version)
 }
