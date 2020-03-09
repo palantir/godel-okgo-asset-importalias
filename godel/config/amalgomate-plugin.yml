@@ -1,5 +1,5 @@
 amalgomators:
-  compiles:
+  importalias:
     config: check.yml
     output-dir: generated_src
     pkg: amalgomatedcheck
