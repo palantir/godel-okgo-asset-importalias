@@ -17,7 +17,7 @@ package amalgomated
 import (
 	"os"
 
-	"github.com/palantir/godel-okgo-asset-importalias/generated_src/internal/github.com/palantir/go-importalias/cmd"
+	"./cmd"
 )
 
 func AmalgomatedMain() {
