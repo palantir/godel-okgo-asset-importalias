@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sort"
 
-	importalias "github.com/palantir/godel-okgo-asset-importalias/generated_src/internal/github.com/palantir/go-importalias"
+	importalias "."
 )
 
 var programs = map[string]func(){"importalias": func() {
