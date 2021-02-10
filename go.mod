@@ -15,7 +15,7 @@ require (
 	github.com/palantir/pkg/pkgpath v1.0.1 // indirect
 	github.com/palantir/pkg/specdir v1.0.1 // indirect
 	github.com/pkg/errors v0.8.1
-	github.com/spf13/cobra v1.1.1
+	github.com/spf13/cobra v1.1.3
 	github.com/stretchr/testify v1.4.0
-	gopkg.in/yaml.v2 v2.2.8
+	gopkg.in/yaml.v2 v2.4.0
 )
