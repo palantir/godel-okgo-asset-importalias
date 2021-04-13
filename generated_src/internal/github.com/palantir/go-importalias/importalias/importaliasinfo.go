@@ -25,19 +25,20 @@ import (
 )
 
 type aliasInfo struct {
-	ImportPath	string
-	Alias		string
+	ImportPath string
+	Alias      string
 	// file -> line information for import in the file
-	Occurrences	map[string]token.Position
+	Occurrences map[string]token.Position
 }
 
 type singleAlias struct {
-	ImportPath	string
-	Alias		string
-	Pos		token.Position
+	ImportPath string
+	Alias      string
+	Pos        token.Position
 }
 
 type projectImportAliasInfo struct {
+	// import path -> alias -> all aliases for the import
 	importInfos map[string]map[string]aliasInfo
 }
 
@@ -58,9 +59,9 @@ type ProjectImportInfo interface {
 
 type AliasStatus struct {
 	// true if this alias is the only alias used for a package or is the most common alias used for a package.
-	OK	bool
+	OK bool
 	// recommendation for how to fix the issue if OK is false.
-	Recommendation	string
+	Recommendation string
 }
 
 func NewProjectImportInfo() ProjectImportInfo {
@@ -89,7 +90,7 @@ func (p *projectImportAliasInfo) AddImportAliasesFromFile(filename string) error
 		switch v := node.(type) {
 		case *ast.ImportSpec:
 			if v.Name != nil && v.Name.Name != "." && v.Name.Name != "_" {
-
+				// import has alias: record
 				p.addImportAlias(filename, v.Name.Name, v.Path.Value, fset.Position(v.Pos()))
 				break
 			}
@@ -112,9 +113,9 @@ func (p *projectImportAliasInfo) addImportAlias(file, alias, importPath string, 
 	}
 	if _, ok := p.importInfos[importPath][alias]; !ok {
 		p.importInfos[importPath][alias] = aliasInfo{
-			ImportPath:	importPath,
-			Alias:		alias,
-			Occurrences:	make(map[string]token.Position),
+			ImportPath:  importPath,
+			Alias:       alias,
+			Occurrences: make(map[string]token.Position),
 		}
 	}
 	p.importInfos[importPath][alias].Occurrences[file] = pos
@@ -139,9 +140,9 @@ func (p *projectImportAliasInfo) FilesToImportAliases() map[string][]singleAlias
 		for _, currAliasInfo := range aliases {
 			for file, pos := range currAliasInfo.Occurrences {
 				m[file] = append(m[file], singleAlias{
-					ImportPath:	importPath,
-					Alias:		currAliasInfo.Alias,
-					Pos:		pos,
+					ImportPath: importPath,
+					Alias:      currAliasInfo.Alias,
+					Pos:        pos,
 				})
 			}
 		}
@@ -185,14 +186,14 @@ func (p *projectImportAliasInfo) GetAliasStatus(alias, importPath string) AliasS
 
 			// there is not a single most common alias
 			return AliasStatus{
-				OK:		false,
-				Recommendation:	fmt.Sprintf("No consensus alias exists for this import in the project (%s used %s each)", aliasesUsed, timesUsed),
+				OK:             false,
+				Recommendation: fmt.Sprintf("No consensus alias exists for this import in the project (%s used %s each)", aliasesUsed, timesUsed),
 			}
 		case alias != mostCommonAliases[0]:
 			// this is not the most common alias
 			return AliasStatus{
-				OK:		false,
-				Recommendation:	fmt.Sprintf("Use alias %q instead", mostCommonAliases[0]),
+				OK:             false,
+				Recommendation: fmt.Sprintf("Use alias %q instead", mostCommonAliases[0]),
 			}
 		}
 	}
@@ -203,8 +204,8 @@ func (p *projectImportAliasInfo) GetAliasStatus(alias, importPath string) AliasS
 
 type byNumOccurrencesDesc []aliasInfo
 
-func (a byNumOccurrencesDesc) Len() int		{ return len(a) }
-func (a byNumOccurrencesDesc) Swap(i, j int)	{ a[i], a[j] = a[j], a[i] }
+func (a byNumOccurrencesDesc) Len() int      { return len(a) }
+func (a byNumOccurrencesDesc) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 func (a byNumOccurrencesDesc) Less(i, j int) bool {
 	if len(a[i].Occurrences) == len(a[j].Occurrences) {
 		// if number of occurrences are the same, do secondary sort based on name of alias
@@ -216,8 +217,8 @@ func (a byNumOccurrencesDesc) Less(i, j int) bool {
 
 type byPos []singleAlias
 
-func (a byPos) Len() int	{ return len(a) }
-func (a byPos) Swap(i, j int)	{ a[i], a[j] = a[j], a[i] }
+func (a byPos) Len() int      { return len(a) }
+func (a byPos) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 func (a byPos) Less(i, j int) bool {
 	return a[i].Pos.Line < a[j].Pos.Line
 }
