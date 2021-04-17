@@ -11,6 +11,8 @@ products:
           arch: arm64
         - os: linux
           arch: amd64
+        - os: linux
+          arch: arm64
     dist:
       disters:
         os-arch-bin:
@@ -23,6 +25,8 @@ products:
                 arch: arm64
               - os: linux
                 arch: amd64
+              - os: linux
+                arch: arm64
     publish: {}
 product-defaults:
   publish:
