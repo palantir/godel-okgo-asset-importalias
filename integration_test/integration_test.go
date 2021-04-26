@@ -25,8 +25,8 @@ import (
 )
 
 const (
-	okgoPluginLocator  = "com.palantir.okgo:check-plugin:1.0.0"
-	okgoPluginResolver = "https://palantir.bintray.com/releases/{{GroupPath}}/{{Product}}/{{Version}}/{{Product}}-{{Version}}-{{OS}}-{{Arch}}.tgz"
+	okgoPluginLocator  = "com.palantir.okgo:check-plugin:1.12.0"
+	okgoPluginResolver = "https://github.com/{{index GroupParts 1}}/{{index GroupParts 2}}/releases/download/v{{Version}}/{{Product}}-{{Version}}-{{OS}}-{{Arch}}.tgz"
 )
 
 func TestCheck(t *testing.T) {
