@@ -15,10 +15,9 @@
 package creator
 
 import (
+	"github.com/palantir/godel-okgo-asset-importalias/importalias"
 	"github.com/palantir/okgo/checker"
 	"github.com/palantir/okgo/okgo"
-
-	"github.com/palantir/godel-okgo-asset-importalias/importalias"
 )
 
 func Importalias() checker.Creator {
