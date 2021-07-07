@@ -3,13 +3,13 @@
 # To manually manage the CircleCI configuration for this project, remove the .circleci/template.sh file.
 
 owner-repo: &owner-repo
-  owner-repo: palantir/godel-okgo-asset-importalias
+  owner-repo:
 
 executor: &executor
   executor:
-    name: cimg/go
-    go-docker-version: 1.16-browsers
-    <<: *owner-repo
+    docker:
+      - image: cimg/go:1.16-browsers
+    working_directory: /home/circleci/go/src/palantir/godel-okgo-asset-importalias
 
 version: 2.1
 
@@ -21,6 +21,7 @@ all-tags-filter: &all-tags-filter
   filters:
     tags:
       only: /.*/
+
 
 workflows:
   version: 2
