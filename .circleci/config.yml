@@ -2,14 +2,14 @@
 # To request a modification to the general template, file an issue on Excavator.
 # To manually manage the CircleCI configuration for this project, remove the .circleci/template.sh file.
 
-owner-repo: &owner-repo
-  owner-repo:
-
-executor: &executor
-  executor:
+executors:
+  circleci-go-java:
     docker:
       - image: cimg/go:1.16-browsers
     working_directory: /home/circleci/go/src/palantir/godel-okgo-asset-importalias
+
+executor: &executor
+  executor: circleci-go-java
 
 version: 2.1
 
