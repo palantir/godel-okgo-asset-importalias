@@ -7,8 +7,8 @@ owner-repo: &owner-repo
 
 executor: &executor
   executor:
-    name: go/golang
-    version: 1.16.5
+    name: cimg/go
+    go-docker-version: 1.16-browsers
     <<: *owner-repo
 
 version: 2.1
@@ -21,7 +21,6 @@ all-tags-filter: &all-tags-filter
   filters:
     tags:
       only: /.*/
-
 
 workflows:
   version: 2
