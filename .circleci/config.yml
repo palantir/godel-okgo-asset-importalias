@@ -1,5 +1,5 @@
-executor: &executor
-  executor:
+executors:
+  circleci-go:
     docker:
       - image: cimg/go:1.16-browsers
     working_directory: /home/circleci/go/src/palantir/godel-okgo-asset-importalias
@@ -24,16 +24,16 @@ workflows:
     jobs:
       - godel/verify:
           name: verify
-          <<: *executor
+          executor: circleci-go
           <<: *gopath
           <<: *all-tags-filter
       - godel/test:
           name: test
-          <<: *executor
+          executor: circleci-go
           <<: *gopath
           <<: *all-tags-filter
       - godel/dist:
           name: dist
-          <<: *executor
+          executor: circleci-go
           <<: *gopath
           <<: *all-tags-filter
