@@ -7,6 +7,9 @@ executors:
 gopath: &gopath
   gopath: /home/circleci/go
 
+build-cache-path: &build-cache-path
+  build-cache-path: /home/circleci/.cache/go-build
+
 version: 2.1
 
 orbs:
@@ -26,14 +29,17 @@ workflows:
           name: verify
           executor: circleci-go
           <<: *gopath
+          <<: *build-cache-path
           <<: *all-tags-filter
       - godel/test:
           name: test
           executor: circleci-go
           <<: *gopath
+          <<: *build-cache-path
           <<: *all-tags-filter
       - godel/dist:
           name: dist
           executor: circleci-go
           <<: *gopath
+          <<: *build-cache-path
           <<: *all-tags-filter
