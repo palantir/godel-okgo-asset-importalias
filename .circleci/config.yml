@@ -4,17 +4,17 @@ executors:
       - image: cimg/go:1.16-browsers
     working_directory: /home/circleci/go/src/palantir/godel-okgo-asset-importalias
 
+homepath: &homepath
+  homepath: /home/circleci
+
 gopath: &gopath
   gopath: /home/circleci/go
-
-build-cache-path: &build-cache-path
-  build-cache-path: /home/circleci/.cache/go-build
 
 version: 2.1
 
 orbs:
-  go: palantir/go@0.0.22
-  godel: palantir/godel@dev:develop-1567509c00beb91f01f27e1b1bdcb2768b4de0ae
+  go: palantir/go@0.0.23
+  godel: palantir/godel@dev:develop-9cc21466bd27e99a964a353f10e610113e4fb84e
 
 all-tags-filter: &all-tags-filter
   filters:
@@ -28,18 +28,18 @@ workflows:
       - godel/verify:
           name: verify
           executor: circleci-go
+          <<: *homepath
           <<: *gopath
-          <<: *build-cache-path
           <<: *all-tags-filter
       - godel/test:
           name: test
           executor: circleci-go
+          <<: *homepath
           <<: *gopath
-          <<: *build-cache-path
           <<: *all-tags-filter
       - godel/dist:
           name: dist
           executor: circleci-go
+          <<: *homepath
           <<: *gopath
-          <<: *build-cache-path
           <<: *all-tags-filter
