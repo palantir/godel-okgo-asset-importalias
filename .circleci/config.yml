@@ -6,7 +6,7 @@ version: 2.1
 
 orbs:
   go: palantir/go@0.0.24
-  godel: palantir/godel@dev:develop-fb9a1ca10f560ee3ffa04f26c4272d541a33f35f
+  godel: palantir/godel@0.0.24
 
 homepath: &homepath
   homepath: /home/circleci
@@ -18,39 +18,25 @@ executors:
   circleci-go:
     docker:
       - image: cimg/go:1.16-browsers
-    working_directory: /home/circleci/go/src/palantir/godel-okgo-asset-importalias
-
-all-tags-filter: &all-tags-filter
-  filters:
-    tags:
-      only: /.*/
+    working_directory: /home/circleci/go/src/test-repository-owner/test-repository-name
 
 workflows:
   version: 2
-  verify-test-dist-publish:
+  verify-test:
     jobs:
       - godel/verify:
           name: verify
           executor: circleci-go
           <<: *homepath
           <<: *gopath
-          <<: *all-tags-filter
       - godel/test:
-          name: test
+          name: test-go-latest
           executor: circleci-go
           <<: *homepath
           <<: *gopath
-          <<: *all-tags-filter
       - godel/test:
-          name: test-prev
+          name: test-go-prev
           executor: circleci-go
           <<: *homepath
           <<: *gopath
-          <<: *all-tags-filter
           go-prev-version: 1
-      - godel/dist:
-          name: dist
-          executor: circleci-go
-          <<: *homepath
-          <<: *gopath
-          <<: *all-tags-filter
