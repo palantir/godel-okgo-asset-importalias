@@ -18,7 +18,7 @@ executors:
   circleci-go:
     docker:
       - image: cimg/go:1.16-browsers
-    working_directory: /home/circleci/go/src/palantir/godel-okgo-asset-importalias
+    working_directory: /home/circleci/go/src/github.com/palantir/godel-okgo-asset-importalias
 
 all-tags-filter: &all-tags-filter
   filters:
