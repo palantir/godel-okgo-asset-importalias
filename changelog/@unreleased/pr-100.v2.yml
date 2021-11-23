@@ -1,0 +1,6 @@
+type: fix
+fix:
+  description: Updates github.com/ulikunitz/xz module to v0.5.10 to resolve security
+    vulnerability.
+  links:
+  - https://github.com/palantir/godel-okgo-asset-importalias/pull/100
