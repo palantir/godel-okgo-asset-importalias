@@ -15,47 +15,29 @@
 package checker
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"os/exec"
 	"strings"
 
-	"github.com/palantir/godel/framework/pluginapi"
-	"github.com/pkg/errors"
-
+	"github.com/palantir/godel/v2/framework/pluginapi"
 	"github.com/palantir/okgo/okgo"
+	"github.com/pkg/errors"
 )
 
 type assetChecker struct {
-	assetPath string
-	cfgYML    string
+	assetPath       string
+	cfgYML          string
+	checkerType     okgo.CheckerType
+	checkerPriority okgo.CheckerPriority
 }
 
 func (c *assetChecker) Type() (okgo.CheckerType, error) {
-	nameCmd := exec.Command(c.assetPath, typeCmdName)
-	outputBytes, err := runCommand(nameCmd)
-	if err != nil {
-		return "", err
-	}
-	var checkerType okgo.CheckerType
-	if err := json.Unmarshal(outputBytes, &checkerType); err != nil {
-		return "", errors.Wrapf(err, "failed to unmarshal JSON")
-	}
-	return checkerType, nil
+	return c.checkerType, nil
 }
 
 func (c *assetChecker) Priority() (okgo.CheckerPriority, error) {
-	nameCmd := exec.Command(c.assetPath, priorityCmdName)
-	outputBytes, err := runCommand(nameCmd)
-	if err != nil {
-		return 0, err
-	}
-	var checkerPriority okgo.CheckerPriority
-	if err := json.Unmarshal(outputBytes, &checkerPriority); err != nil {
-		return 0, errors.Wrapf(err, "failed to unmarshal JSON")
-	}
-	return checkerPriority, nil
+	return c.checkerPriority, nil
 }
 
 func (c *assetChecker) VerifyConfig() error {
