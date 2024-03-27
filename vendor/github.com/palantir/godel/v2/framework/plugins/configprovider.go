@@ -17,9 +17,8 @@ package plugins
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/palantir/godel/v2/framework/artifactresolver"
@@ -37,9 +36,9 @@ import (
 // LoadProvidedConfigurations returns all of the godellauncher.GodelConfig configurations provided by the specified
 // params. Does the following:
 //
-// * Resolves all of the configuration providers defined in the provided params into the gödel home configs and
-//   downloads directories.
-// * Unmarshals all of the resolved configurations into godellauncher.TasksConfig structs.
+//   - Resolves all of the configuration providers defined in the provided params into the gödel home configs and
+//     downloads directories.
+//   - Unmarshals all of the resolved configurations into godellauncher.TasksConfig structs.
 //
 // Returns all of the unmarshaled configurations.
 func LoadProvidedConfigurations(taskConfigProvidersParam godellauncher.TasksConfigProvidersParam, stdout io.Writer) ([]config.TasksConfig, error) {
@@ -59,16 +58,16 @@ func LoadProvidedConfigurations(taskConfigProvidersParam godellauncher.TasksConf
 // For each configuration provider defined in the parameters:
 //
 // * If a file does not exist in the expected location in the configurations directory, resolve it
-//   * If the configuration provider specifies a custom resolver, use it to resolve the configuration YML to the
+//   - If the configuration provider specifies a custom resolver, use it to resolve the configuration YML to the
 //     expected location in the configurations directory
-//   * Otherwise, if default resolvers are specified in the parameters, try to resolve the configuration YML to the
+//   - Otherwise, if default resolvers are specified in the parameters, try to resolve the configuration YML to the
 //     expected location from each of them in order
-//   * If the configuration cannot be resolved, return an error
-// * If the configuration specifies a checksum, verify that the checksum of the YML in the configurations directory
-//   matches the specified checksum
-// * Unmarshal the downloaded YML as godellauncher.TasksConfig
-//   * If the unmarshal fails, return an error
-//   * If the TaskConfig contains a plugin configuration that specifies an "override" parameter, return an error
+//   - If the configuration cannot be resolved, return an error
+//   - If the configuration specifies a checksum, verify that the checksum of the YML in the configurations directory
+//     matches the specified checksum
+//   - Unmarshal the downloaded YML as godellauncher.TasksConfig
+//   - If the unmarshal fails, return an error
+//   - If the TaskConfig contains a plugin configuration that specifies an "override" parameter, return an error
 //     (configuration providers are not allowed to set overrides)
 func resolveConfigProviders(configsDir, downloadsDir string, taskConfigProvidersParam godellauncher.TasksConfigProvidersParam, stdout io.Writer) ([]config.TasksConfig, error) {
 	var configs []config.TasksConfig
@@ -133,10 +132,10 @@ func resolveAndVerifyConfigProvider(
 	stdout io.Writer) (currLocator artifactresolver.Locator, ok bool) {
 
 	currLocator = currArtifact.LocatorWithChecksums.Locator
-	currDstPath := path.Join(dstBaseDir, pathsinternal.ConfigProviderFileName(currLocator))
+	currDstPath := filepath.Join(dstBaseDir, pathsinternal.ConfigProviderFileName(currLocator))
 
 	if _, err := os.Stat(currDstPath); os.IsNotExist(err) {
-		downloadDstPath := path.Join(downloadsDir, pathsinternal.ConfigProviderFileName(currLocator))
+		downloadDstPath := filepath.Join(downloadsDir, pathsinternal.ConfigProviderFileName(currLocator))
 		if err := artifactresolver.ResolveArtifact(currArtifact, defaultResolvers, osarch.Current(), downloadDstPath, artifactresolver.SHA256ChecksumFile, stdout); err != nil {
 			artifactErrors[currLocator] = err
 			return currLocator, false
@@ -181,9 +180,9 @@ func resolveAndVerifyConfigProvider(
 }
 
 func readConfigFromProvider(locator artifactresolver.Locator, configsDir string) (config.TasksConfig, error) {
-	cfgPath := path.Join(configsDir, pathsinternal.ConfigProviderFileName(locator))
+	cfgPath := filepath.Join(configsDir, pathsinternal.ConfigProviderFileName(locator))
 
-	cfgBytes, err := ioutil.ReadFile(cfgPath)
+	cfgBytes, err := os.ReadFile(cfgPath)
 	if err != nil {
 		return config.TasksConfig{}, errors.Wrapf(err, "failed to read %s", cfgPath)
 	}
