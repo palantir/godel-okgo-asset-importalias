@@ -1,6 +1,6 @@
 module github.com/palantir/godel-okgo-asset-importalias
 
-go 1.21
+go 1.22
 
 require (
 	github.com/nmiyake/pkg/gofiles v1.0.1
