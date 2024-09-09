@@ -59,6 +59,10 @@ func TestCheck(t *testing.T) {
 				Name: "importalias used inconsistently",
 				Specs: []gofiles.GoFileSpec{
 					{
+						RelPath: "go.mod",
+						Src:     `module foo`,
+					},
+					{
 						RelPath: "foo.go",
 						Src:     `package main; import foo "fmt"; func main(){ foo.Println() }`,
 					},
@@ -82,6 +86,10 @@ Check(s) produced output: [importalias]
 			{
 				Name: "importalias used inconsistently in file from inner directory",
 				Specs: []gofiles.GoFileSpec{
+					{
+						RelPath: "go.mod",
+						Src:     `module foo`,
+					},
 					{
 						RelPath: "foo.go",
 						Src:     `package main; import foo "fmt"; func main(){ foo.Println() }`,
