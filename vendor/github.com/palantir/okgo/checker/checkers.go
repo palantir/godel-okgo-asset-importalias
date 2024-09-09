@@ -22,10 +22,11 @@ import (
 	"os"
 	"os/exec"
 	"sort"
-
-	"github.com/pkg/errors"
+	"sync"
 
 	"github.com/palantir/okgo/okgo"
+	"github.com/pkg/errors"
+	"golang.org/x/sync/errgroup"
 )
 
 type CreatorFunction func(cfgYML []byte) (okgo.Checker, error)
@@ -33,12 +34,14 @@ type CreatorFunction func(cfgYML []byte) (okgo.Checker, error)
 type Creator interface {
 	Type() okgo.CheckerType
 	Priority() okgo.CheckerPriority
+	MultiCPU() okgo.CheckerMultiCPU
 	Creator() CreatorFunction
 }
 
 type creatorStruct struct {
 	checkerType okgo.CheckerType
 	priority    okgo.CheckerPriority
+	multiCPU    okgo.CheckerMultiCPU
 	creator     CreatorFunction
 }
 
@@ -50,14 +53,27 @@ func (c *creatorStruct) Priority() okgo.CheckerPriority {
 	return c.priority
 }
 
+func (c *creatorStruct) MultiCPU() okgo.CheckerMultiCPU {
+	return c.multiCPU
+}
+
 func (c *creatorStruct) Creator() CreatorFunction {
 	return c.creator
 }
 
 func NewCreator(checkerType okgo.CheckerType, priority okgo.CheckerPriority, creatorFn CreatorFunction) Creator {
+	return NewCreatorWithMultiCPU(checkerType, priority, false, creatorFn)
+}
+
+func NewCreatorWithMultiCPU(
+	checkerType okgo.CheckerType,
+	priority okgo.CheckerPriority,
+	multiCPU okgo.CheckerMultiCPU,
+	creatorFn CreatorFunction) Creator {
 	return &creatorStruct{
 		checkerType: checkerType,
 		priority:    priority,
+		multiCPU:    multiCPU,
 		creator:     creatorFn,
 	}
 }
@@ -66,25 +82,25 @@ func AssetCheckerCreators(assetPaths ...string) ([]Creator, []okgo.ConfigUpgrade
 	var checkerCreators []Creator
 	var configUpgraders []okgo.ConfigUpgrader
 	checkerTypeToAssets := make(map[okgo.CheckerType][]string)
+	checkerMetadatas, err := determineCheckerMetadataForPaths(assetPaths)
+	if err != nil {
+		return nil, nil, err
+	}
 	for _, currAssetPath := range assetPaths {
 		currAssetPath := currAssetPath
-		currChecker := assetChecker{
-			assetPath: currAssetPath,
-		}
-		checkerType, err := currChecker.Type()
-		if err != nil {
-			return nil, nil, errors.Wrapf(err, "failed to determine Checker type name for asset %s", currAssetPath)
-		}
-		checkerPriority, err := currChecker.Priority()
-		if err != nil {
-			return nil, nil, errors.Wrapf(err, "failed to determine Checker priority for asset %s", currAssetPath)
-		}
+		checkerMetadata := checkerMetadatas[currAssetPath]
+		checkerType := checkerMetadata.checkerType
+		checkerPriority := checkerMetadata.checkerPriority
+		checkerMultiCPU := checkerMetadata.checkerMultiCPU
 		checkerTypeToAssets[checkerType] = append(checkerTypeToAssets[checkerType], currAssetPath)
-		checkerCreators = append(checkerCreators, NewCreator(checkerType, checkerPriority,
+		checkerCreators = append(checkerCreators, NewCreatorWithMultiCPU(checkerType, checkerPriority, checkerMultiCPU,
 			func(cfgYML []byte) (okgo.Checker, error) {
 				newChecker := assetChecker{
-					assetPath: currAssetPath,
-					cfgYML:    string(cfgYML),
+					assetPath:       currAssetPath,
+					cfgYML:          string(cfgYML),
+					checkerType:     checkerType,
+					checkerPriority: checkerPriority,
+					checkerMultiCPU: checkerMultiCPU,
 				}
 				if err := newChecker.VerifyConfig(); err != nil {
 					return nil, err
@@ -109,6 +125,76 @@ func AssetCheckerCreators(assetPaths ...string) ([]Creator, []okgo.ConfigUpgrade
 		return nil, nil, errors.Errorf("Checker type %s provided by multiple assets: %v", k, checkerTypeToAssets[k])
 	}
 	return checkerCreators, configUpgraders, nil
+}
+
+type checkerMetadata struct {
+	checkerType     okgo.CheckerType
+	checkerPriority okgo.CheckerPriority
+	checkerMultiCPU okgo.CheckerMultiCPU
+}
+
+func determineCheckerMetadataForPaths(assetPaths []string) (map[string]checkerMetadata, error) {
+	checkerMetadatas := make(map[string]checkerMetadata)
+	var (
+		mapLock sync.Mutex
+		g       errgroup.Group
+	)
+	for _, assetPathSingle := range assetPaths {
+		assetPath := assetPathSingle
+		g.Go(func() error {
+			checkerMetadataForAsset, err := determineCheckerMetadata(assetPath)
+			if err != nil {
+				return err
+			}
+			mapLock.Lock()
+			checkerMetadatas[assetPath] = checkerMetadataForAsset
+			mapLock.Unlock()
+			return nil
+		})
+	}
+	if err := g.Wait(); err != nil {
+		return nil, err
+	}
+	return checkerMetadatas, nil
+}
+
+func determineCheckerMetadata(assetPath string) (checkerMetadata, error) {
+	nameCmd := exec.Command(assetPath, typeCmdName)
+	outputBytes, err := runCommand(nameCmd)
+	if err != nil {
+		return checkerMetadata{}, err
+	}
+	var checkerType okgo.CheckerType
+	if err := json.Unmarshal(outputBytes, &checkerType); err != nil {
+		return checkerMetadata{}, errors.Wrapf(err, "failed to unmarshal JSON")
+	}
+	priorityCmd := exec.Command(assetPath, priorityCmdName)
+	outputBytes, err = runCommand(priorityCmd)
+	if err != nil {
+		return checkerMetadata{}, err
+	}
+	var checkerPriority okgo.CheckerPriority
+	if err := json.Unmarshal(outputBytes, &checkerPriority); err != nil {
+		return checkerMetadata{}, errors.Wrapf(err, "failed to unmarshal JSON")
+	}
+	return checkerMetadata{
+		checkerType:     checkerType,
+		checkerPriority: checkerPriority,
+		checkerMultiCPU: getCheckerMultiCPU(assetPath),
+	}, nil
+}
+
+func getCheckerMultiCPU(assetPath string) okgo.CheckerMultiCPU {
+	multiCPUCmd := exec.Command(assetPath, multiCPUCmdName)
+	outputBytes, err := runCommand(multiCPUCmd)
+	if err != nil {
+		return false
+	}
+	var checkerPriority okgo.CheckerMultiCPU
+	if err := json.Unmarshal(outputBytes, &checkerPriority); err != nil {
+		return false
+	}
+	return checkerPriority
 }
 
 // RunCommandAndStreamOutput runs the provided exec.Cmd. The output that is generated to Stdout and Stderr for the
