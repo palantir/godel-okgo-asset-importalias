@@ -4,10 +4,10 @@ go 1.23.0
 
 require (
 	github.com/nmiyake/pkg/gofiles v1.2.0
-	github.com/palantir/amalgomate v1.43.0
-	github.com/palantir/go-importalias v1.2.0
-	github.com/palantir/godel/v2 v2.118.0
-	github.com/palantir/okgo v1.59.0
+	github.com/palantir/amalgomate v1.44.0
+	github.com/palantir/go-importalias v1.36.0
+	github.com/palantir/godel/v2 v2.119.0
+	github.com/palantir/okgo v1.61.0
 	github.com/palantir/pkg/cobracli v1.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.8.1
@@ -45,7 +45,7 @@ require (
 	github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8 // indirect
 	golang.org/x/mod v0.21.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.23.0 // indirect
-	golang.org/x/tools v0.24.0 // indirect
+	golang.org/x/sys v0.26.0 // indirect
+	golang.org/x/tools v0.26.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
