@@ -62,8 +62,8 @@ github.com/palantir/go-importalias v1.2.0 h1:UFTi+i/M4J5WBt2Zs+Z1dBJpLv/MvCWVo4N
 github.com/palantir/go-importalias v1.2.0/go.mod h1:TUzu7CmtFMGG9TsHPEE8xXGoM1tGBPTbPd/T16CmBvA=
 github.com/palantir/godel/v2 v2.134.0 h1:ssBYBjVp6ZBNhOyOqzBzYoKM+xuBA8P8poOiL5RP46M=
 github.com/palantir/godel/v2 v2.134.0/go.mod h1:PjHi7UsIMAG2LTIYcz/Jkh+tnIKOlFq8djlT8nmqO5w=
-github.com/palantir/okgo v1.59.0 h1:MZKAtd8geuWx/GK+QCPajfyDihr/t7dZ1qqz5aMFakQ=
-github.com/palantir/okgo v1.59.0/go.mod h1:cK2/gTym0e4KvqzHv758arM/2YgoQo7wcWKysP/BLW4=
+github.com/palantir/okgo v1.63.0 h1:0F4MLnHFUYVb1aXbr4Fmma7KQqHJaoNlNC2X22WkXKU=
+github.com/palantir/okgo v1.63.0/go.mod h1:9Pe5PPXdr1B2Ld6ZGTArvkHALeDLzD4+2WpiN/yXfWI=
 github.com/palantir/pkg v0.0.0-20180424172112-23395ebeee5d/go.mod h1:jLbXCfQ4HRrT5RRj5JuKc1ucQeridBMyRCpmzRtUYMY=
 github.com/palantir/pkg v1.1.0 h1:0EhrSUP8oeeh3MUvk7V/UU7WmsN1UiJNTvNj0sN9Cpo=
 github.com/palantir/pkg v1.1.0/go.mod h1:KC9srP/9ssWRxBxFCIqhUGC4Jt7OJkWRz0Iqehup1/c=
