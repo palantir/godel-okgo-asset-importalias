@@ -106,8 +106,8 @@ github.com/palantir/godel/v2/godelgetter
 github.com/palantir/godel/v2/pkg/osarch
 github.com/palantir/godel/v2/pkg/products
 github.com/palantir/godel/v2/pkg/versionedconfig
-# github.com/palantir/okgo v1.63.0
-## explicit; go 1.24.0
+# github.com/palantir/okgo v1.64.0
+## explicit; go 1.25.0
 github.com/palantir/okgo/checker
 github.com/palantir/okgo/okgo
 github.com/palantir/okgo/okgotester
