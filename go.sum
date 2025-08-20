@@ -60,8 +60,8 @@ github.com/palantir/amalgomate v1.51.0 h1:ytjucSVqpE3ajAqlu40j91Lf8Yeer3RaLZ8lyq
 github.com/palantir/amalgomate v1.51.0/go.mod h1:UA6DoohFKTAibS9huLJ93lVLjh81SW+GM3HEksXdZYE=
 github.com/palantir/go-importalias v1.2.0 h1:UFTi+i/M4J5WBt2Zs+Z1dBJpLv/MvCWVo4NRKYb1X9I=
 github.com/palantir/go-importalias v1.2.0/go.mod h1:TUzu7CmtFMGG9TsHPEE8xXGoM1tGBPTbPd/T16CmBvA=
-github.com/palantir/godel/v2 v2.136.0 h1:3pcbJBuMhmMoYpGTWGIfTiB8iY6gSHX7gloyVc+PXnk=
-github.com/palantir/godel/v2 v2.136.0/go.mod h1:xV9MEdJOz3ZVJ9LnD/U7cdnrClSrFq8XCF/wNUg833E=
+github.com/palantir/godel/v2 v2.137.0 h1:lUPMRakVmCZI6O+pnOPj0b9vKyb+2cxQIkoFOsBRvAs=
+github.com/palantir/godel/v2 v2.137.0/go.mod h1:cSWgS1PsZ3vXuiTSh8rcvFM2AAr4uCjQ4it/uYcIo8I=
 github.com/palantir/okgo v1.63.0 h1:0F4MLnHFUYVb1aXbr4Fmma7KQqHJaoNlNC2X22WkXKU=
 github.com/palantir/okgo v1.63.0/go.mod h1:9Pe5PPXdr1B2Ld6ZGTArvkHALeDLzD4+2WpiN/yXfWI=
 github.com/palantir/pkg v0.0.0-20180424172112-23395ebeee5d/go.mod h1:jLbXCfQ4HRrT5RRj5JuKc1ucQeridBMyRCpmzRtUYMY=
