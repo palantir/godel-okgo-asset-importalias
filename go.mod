@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/nmiyake/pkg/gofiles v1.2.0
 	github.com/palantir/amalgomate v1.51.0
-	github.com/palantir/go-importalias v1.2.0
+	github.com/palantir/go-importalias v1.38.0
 	github.com/palantir/godel/v2 v2.137.0
 	github.com/palantir/okgo v1.64.0
 	github.com/palantir/pkg/cobracli v1.2.0
