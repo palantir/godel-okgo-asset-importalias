@@ -36,7 +36,7 @@ require (
 	github.com/nwaples/rardecode v1.1.3 // indirect
 	github.com/palantir/pkg v1.1.0 // indirect
 	github.com/palantir/pkg/matcher v1.3.0 // indirect
-	github.com/palantir/pkg/pkgpath v1.3.0 // indirect
+	github.com/palantir/pkg/pkgpath v1.4.0 // indirect
 	github.com/palantir/pkg/specdir v1.2.0 // indirect
 	github.com/pierrec/lz4/v4 v4.1.22 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
