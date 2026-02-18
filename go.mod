@@ -6,7 +6,7 @@ require (
 	github.com/nmiyake/pkg/gofiles v1.2.0
 	github.com/palantir/amalgomate v1.52.0
 	github.com/palantir/go-importalias v1.39.0
-	github.com/palantir/godel/v2 v2.150.0
+	github.com/palantir/godel/v2 v2.152.0
 	github.com/palantir/okgo v1.65.0
 	github.com/palantir/pkg/cobracli v1.3.0
 	github.com/pkg/errors v0.9.1
