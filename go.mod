@@ -2,6 +2,8 @@ module github.com/palantir/godel-okgo-asset-importalias
 
 go 1.26.0
 
+toolchain go1.26.3
+
 require (
 	github.com/nmiyake/pkg/gofiles v1.2.0
 	github.com/palantir/amalgomate v1.55.0
