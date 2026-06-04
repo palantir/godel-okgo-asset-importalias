@@ -56,8 +56,8 @@ github.com/nmiyake/pkg/gofiles v1.2.0/go.mod h1:aPXiVvXPwxNanRNuFIRVPYn6eTC4qxjD
 github.com/nwaples/rardecode v1.1.0/go.mod h1:5DzqNKiOdpKKBH87u8VlvAnPZMXcGRhxWkRpHbbfGS0=
 github.com/nwaples/rardecode v1.1.3 h1:cWCaZwfM5H7nAD6PyEdcVnczzV8i/JtotnyW/dD9lEc=
 github.com/nwaples/rardecode v1.1.3/go.mod h1:5DzqNKiOdpKKBH87u8VlvAnPZMXcGRhxWkRpHbbfGS0=
-github.com/palantir/amalgomate v1.56.0 h1:wgdb/kkkXN7pa5OIQguMJQOGLc3oCuX9w/ORetOZTkY=
-github.com/palantir/amalgomate v1.56.0/go.mod h1:5LixZUuEIu6Tx6lUO2N8S+JK0QuS746VlDRhQ6VDTgs=
+github.com/palantir/amalgomate v1.57.0 h1:Me9V4SMnFg/MJb0eUtI2676fcBFiG9llxGbZerYl2S8=
+github.com/palantir/amalgomate v1.57.0/go.mod h1:VaK1OuPzQNDEtECASvSaKuQvZ2MmjUR0s7mqGg4vqDU=
 github.com/palantir/go-importalias v1.40.0 h1:b2q5zT7QXxR+Iqgu/2W9tWl8DGVFDtf2Qg6EHI6EN0Q=
 github.com/palantir/go-importalias v1.40.0/go.mod h1:CUjSKl1YDV3X45DS/sSDe2y3IjeqSfaA4A0rNuHTQFI=
 github.com/palantir/godel/v2 v2.156.0 h1:UCTVMPwTEd6JebzGvTpbzfNIUzMUE9y0y9RQkcmHO6A=
