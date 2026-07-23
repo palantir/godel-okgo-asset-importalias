@@ -7,7 +7,7 @@ toolchain go1.26.5
 require (
 	github.com/nmiyake/pkg/gofiles v1.2.0
 	github.com/palantir/amalgomate v1.58.0
-	github.com/palantir/go-importalias v1.40.0
+	github.com/palantir/go-importalias v1.43.0
 	github.com/palantir/godel/v2 v2.163.0
 	github.com/palantir/okgo v1.70.0
 	github.com/palantir/pkg/cobracli v1.3.0
