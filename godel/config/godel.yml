@@ -3,12 +3,12 @@ plugins:
     - https://github.com/{{index GroupParts 1}}/{{index GroupParts 2}}/releases/download/v{{Version}}/{{Product}}-{{Version}}-{{OS}}-{{Arch}}.tgz
   plugins:
     - locator:
-        id: com.palantir.godel-amalgomate-plugin:amalgomate-plugin:1.60.0
+        id: com.palantir.godel-amalgomate-plugin:amalgomate-plugin:1.61.0
         checksums:
-          darwin-amd64: 0059e7d9c42076ad769ad3deb0cbddbaa17ec36b34b05208c8debf0ffacfd4a8
-          darwin-arm64: 25790157800a171009c5cf436186191d3f53d41ae5f8e1ac940e9bc4491ee06a
-          linux-amd64: 42972a6ddfee21d3e6b73e7f9a71069074f0769d6a30778c40ab4254ca1cd96d
-          linux-arm64: 1dffc15cb19c9d350c69cef237dfe6abc03385170c252c511eb6b1b09c970659
+          darwin-amd64: 79cc8f5c9a4e351e52094c72395a04c62113e73afcf86414e66c4c689c43d6b6
+          darwin-arm64: fd690610351e26e2a54928c8bb5aa9192a788f74db14150f0d2f6780a283fc56
+          linux-amd64: 3a94f95a19243441ac118957dccdd6af2f6ef4f8a8e006bdd2ac18f22e9e3243
+          linux-arm64: fd203b6f018b09c18e69588ae6fb4a4b013af04027e9d9af4c0f2141ea7599fb
     - locator:
         id: com.palantir.godel-mod-plugin:mod-plugin:1.59.0
         checksums:
