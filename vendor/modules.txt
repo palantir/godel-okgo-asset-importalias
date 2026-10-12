@@ -81,7 +81,7 @@ github.com/palantir/amalgomate/amalgomated
 github.com/palantir/go-importalias
 github.com/palantir/go-importalias/cmd
 github.com/palantir/go-importalias/importalias
-# github.com/palantir/godel/v2 v2.183.0
+# github.com/palantir/godel/v2 v2.186.0
 ## explicit; go 1.27.0
 github.com/palantir/godel/v2/framework/artifactresolver
 github.com/palantir/godel/v2/framework/builtintasks
@@ -107,7 +107,7 @@ github.com/palantir/godel/v2/godelgetter
 github.com/palantir/godel/v2/pkg/osarch
 github.com/palantir/godel/v2/pkg/products
 github.com/palantir/godel/v2/pkg/versionedconfig
-# github.com/palantir/okgo v1.73.0
+# github.com/palantir/okgo v1.74.0
 ## explicit; go 1.27.0
 github.com/palantir/okgo/checker
 github.com/palantir/okgo/okgo
@@ -175,7 +175,7 @@ github.com/xi2/xz
 # go.yaml.in/yaml/v3 v3.0.5
 ## explicit; go 1.16
 go.yaml.in/yaml/v3
-# golang.org/x/mod v0.41.0
+# golang.org/x/mod v0.42.0
 ## explicit; go 1.26.0
 golang.org/x/mod/internal/lazyregexp
 golang.org/x/mod/modfile
