@@ -6,7 +6,7 @@ toolchain go1.27.4
 
 require (
 	github.com/nmiyake/pkg/gofiles v1.2.0
-	github.com/palantir/amalgomate v1.62.0
+	github.com/palantir/amalgomate v1.63.0
 	github.com/palantir/go-importalias v1.48.0
 	github.com/palantir/godel/v2 v2.204.0
 	github.com/palantir/okgo v1.77.0
